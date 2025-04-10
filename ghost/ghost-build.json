@@ -1,8 +1,8 @@
 {
     "__comment": "H17I-Ghost Build",
-    "CMainFile": null,
-    "CType": null,
+    "CMainFile": "main.cpp",
+    "CType": "C++",
     "CFlags": null,
-    "COutputWindows": null,
-    "COutputLinux": null
+    "COutputWindows": "win",
+    "COutputLinux": "lin"
 }
