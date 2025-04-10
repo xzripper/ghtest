@@ -1,5 +1,5 @@
 {
-    "CMainFile": null,
-    "CType": null,
+    "CMainFile": "main.cpp",
+    "CType": "C++",
     "CFlags": null
 }
