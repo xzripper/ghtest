@@ -1,5 +1,6 @@
 {
     "CMainFile": "main.cpp",
     "CType": "C++",
-    "CFlags": null
+    "CFlagsWindows": "-static-libstdc++",
+    "CFlagsLinux": null
 }
