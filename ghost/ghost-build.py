@@ -24,37 +24,39 @@ with open('ghost/ghost-build.json', 'r') as gb: gbc: dict = load(gb)
 
 if 'CMainFile' not in gbc: ghost_fail(2)
 if 'CType' not in gbc: ghost_fail(3)
-if 'CFlags' not in gbc: ghost_fail(4)
+if 'CFlagsWindows' not in gbc: ghost_fail(4)
+if 'CFlagsLinux' not in gbc: ghost_fail(5)
 
 cmf = gbc['CMainFile']
 
-if not cmf or not exists(cmf): ghost_fail(7)
+if not cmf or not exists(cmf): ghost_fail(6)
 
 ct = gbc['CType']
 
-if not ct or ct not in ['C', 'C++', 'CPP']: ghost_fail(8)
+if not ct or ct not in ['C', 'C++']: ghost_fail(7)
 
-cf = gbc['CFlags']; cf = '' if not cf else ' ' + cf
+cfw = gbc['CFlagsWindows']; cfw = '' if not cfw else ' ' + cfw
+cfl = gbc['CFlagsLinux']; cfl = '' if not cfl else ' ' + cfl
 
 sys = system()
 
 compiler = 'gcc' if ct == 'C' else 'g++'
 
 if sys == 'Windows':
-    cmd = f'{compiler} {cmf} -o ghost-build-windows.exe{cf}'
+    cmd = f'{compiler} {cmf} -o ghost-build-windows.exe{cfw}'
 
 elif sys == 'Linux':
-    cmd = f'{compiler} {cmf} -o ghost-build-linux{cf}'
+    cmd = f'{compiler} {cmf} -o ghost-build-linux{cfl}'
 
 else:
-    ghost_fail(9)
+    ghost_fail(8)
 
 print('[Ghost] Building...')
 
 try:
     run(cmd, shell=True, check=True)
 except CalledProcessError:
-    ghost_fail(10)
+    ghost_fail(9)
 
 print('[Ghost] Success!')
 
