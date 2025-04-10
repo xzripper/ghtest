@@ -48,7 +48,7 @@ sys = system()
 compiler = 'gcc' if ct == 'C' else 'g++'
 
 if sys == 'Windows':
-    cmd = f'{compiler} {cmf} {co_win}.exe{cf}'
+    cmd = f'{compiler} {cmf} -o {co_win}.exe{cf}'
 
 elif sys == 'Linux':
     cmd = f'{compiler} {cmf} -o {co_linux}{cf}'
