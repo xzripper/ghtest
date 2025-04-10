@@ -1,6 +1,6 @@
 {
     "CMainFile": "main.cpp",
     "CType": "C++",
-    "CFlagsWindows": "-static-libstdc++ -static-libgcc -static-libwinpthread",
+    "CFlagsWindows": "--static",
     "CFlagsLinux": null
 }
