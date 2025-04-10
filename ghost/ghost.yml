@@ -25,7 +25,7 @@ jobs:
         run: sudo apt update && sudo apt install -y build-essential
 
       - name: Build with Ghost
-        run: python ghost-build.py
+        run: python ghost/ghost-build.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -36,7 +36,7 @@ jobs:
             ghost-build-windows.exe
 
   release:
-    name: Release Binaries
+    name: Upload to GitHub Release
     needs: [build]
     runs-on: ubuntu-latest
 
@@ -46,15 +46,9 @@ jobs:
         with:
           path: dist
 
-      - name: Get release tag
-        id: tag
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Create binary release
+      - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}-binaries
-          name: ${{ steps.tag.outputs.tag }} Binaries
-          files: dist/**/*
+          files: dist/**/*  # upload both Linux and Windows builds
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
