@@ -25,8 +25,6 @@ with open('ghost/ghost-build.json', 'r') as gb: gbc: dict = load(gb)
 if 'CMainFile' not in gbc: ghost_fail(2)
 if 'CType' not in gbc: ghost_fail(3)
 if 'CFlags' not in gbc: ghost_fail(4)
-if 'COutputWindows' not in gbc: ghost_fail(5)
-if 'COutputLinux' not in gbc: ghost_fail(6)
 
 cmf = gbc['CMainFile']
 
@@ -36,22 +34,17 @@ ct = gbc['CType']
 
 if not ct or ct not in ['C', 'C++', 'CPP']: ghost_fail(8)
 
-cf = gbc['CFlags']
-
-cf = '' if not cf else ' ' + cf
-
-co_win = gbc.get('COutputWindows', 'ghost-build-windows')
-co_linux = gbc.get('COutputLinux', 'ghost-build-linux')
+cf = gbc['CFlags']; cf = '' if not cf else ' ' + cf
 
 sys = system()
 
 compiler = 'gcc' if ct == 'C' else 'g++'
 
 if sys == 'Windows':
-    cmd = f'{compiler} {cmf} -o {co_win}.exe{cf}'
+    cmd = f'{compiler} {cmf} -o ghost-build-windows.exe{cf}'
 
 elif sys == 'Linux':
-    cmd = f'{compiler} {cmf} -o {co_linux}{cf}'
+    cmd = f'{compiler} {cmf} -o ghost-build-linux{cf}'
 
 else:
     ghost_fail(9)
