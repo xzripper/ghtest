@@ -18,29 +18,19 @@ jobs:
       - name: Set up Python.
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install compiler (Linux only).
         if: runner.os == 'Linux'
         run: sudo apt update && sudo apt install -y build-essential
 
       - name: Build with Ghost.
-        run: python ghost/ghost-build.py
+        run: python ghost-build.py
 
-      - name: Prepare Ghost Build ZIP.
-        run: |
-          mkdir -p zip
-          if [ -f ghost-build-linux ]; then cp ghost-build-linux zip/; fi
-          if [ -f ghost-build-windows.exe ]; then cp ghost-build-windows.exe zip/; fi
-
-      - name: Zip binaries.
-        run: |
-          cd zip
-          zip ../ghost-build.zip *
-        shell: bash
-
-      - name: Upload builds as a single artifact.
+      - name: Upload build artifact.
         uses: actions/upload-artifact@v4
         with:
-          name: Ghost Build
-          path: ghost-build.zip
+          name: Ghost Build for ${{ runner.os }}
+          path: |
+            ghost-build-linux
+            ghost-build-windows.exe
