@@ -25,7 +25,7 @@ jobs:
         run: sudo apt update && sudo apt install -y build-essential
 
       - name: Build with Ghost.
-        run: python ghost-build.py
+        run: python ghost/ghost-build.py
 
       - name: Upload build artifact.
         uses: actions/upload-artifact@v4
