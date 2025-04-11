@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- H17I Github Actions Ghost Build System. -->
-<GhostBuild Compiler="Clang" CType="C++">
+<GhostBuild Compiler="GNU" CType="C++">
     <BuildName>Main File</BuildName>
     <CMainFile>main.cpp</CMainFile>
     <CFlagsWindows>-static-libgcc -static-libstdc++</CFlagsWindows>
