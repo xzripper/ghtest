@@ -4,7 +4,7 @@
 <GhostBuild Compiler="GNU" CType="C++">
     <BuildName>Main File</BuildName>
     <CMainFile>main.cpp</CMainFile>
-    <CFlagsWindows>-static-libgcc -static-libstdc++</CFlagsWindows>
+    <CFlagsWindows>--static</CFlagsWindows>
     <CFlagsLinux>NULL</CFlagsLinux>
     <WindowsAuxiliary>NULL</WindowsAuxiliary>
     <LinuxAuxiliary>NULL</LinuxAuxiliary>
