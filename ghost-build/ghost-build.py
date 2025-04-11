@@ -95,7 +95,7 @@ if gh_sys == 'W' and win_aux:
         ghost_fail('[BUILD-AUXILIARY] Windows auxiliary file crash: can\'t proceed.', 15)
 
 else:
-    print('[BUILD-AUXILIARY] No Windows auxiliary files specified.')
+    print('[BUILD-AUXILIARY] No Windows auxiliary file is specified.')
 
 # Auxiliary files: Linux.
 if gh_sys == 'L' and linux_aux:
@@ -109,7 +109,7 @@ if gh_sys == 'L' and linux_aux:
         ghost_fail('[BUILD-AUXILIARY] Linux auxiliary file crash: can\'t proceed.', 17)
 
 else:
-    print('[BUILD-AUXILIARY] No Linux auxiliary files specified.')
+    print('[BUILD-AUXILIARY] No Linux auxiliary file is specified.')
 
 # Log message.
 _tab = ' ' * 13
@@ -119,8 +119,8 @@ f'[BUILD-INFO] Running Platform: \
 {"Windows" if gh_sys == "W" else "Linux"}\n{_tab}\
 Compiler: {build_compiler}{"? (Fallback to GNU)" if gh_sys == "W" else ""} \
 ({build_compiler_cmd})\n{_tab}C Type: {ctype}\n{_tab}Build name: {build_name}\n{_tab}\
-Main file: {main_file}\n{_tab}Windows Flags: {"None" if not cf_win else cf_win}\n{_tab}\
-Linux Flags: {"None" if not cf_linux else cf_linux}\n{_tab}\
+Main file: {main_file}\n{_tab}Windows Flags: {"None" if not cf_win else cf_win[1:]}\n{_tab}\
+Linux Flags: {"None" if not cf_linux else cf_linux[1:]}\n{_tab}\
 Windows Auxiliary: {win_aux}\n{_tab}Linux Auxiliary: {linux_aux}')
 
 # Start the build process.
