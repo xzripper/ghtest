@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- H17I Github Actions Ghost Build System. -->
+<GhostBuild Compiler="Clang" CType="C++">
+    <BuildName>Main File</BuildName>
+    <CMainFile>main.cpp</CMainFile>
+    <CFlagsWindows>--static</CFlagsWindows>
+    <CFlagsLinux>NULL</CFlagsLinux>
+    <WindowsAuxiliary>NULL</WindowsAuxiliary>
+    <LinuxAuxiliary>NULL</LinuxAuxiliary>
+</GhostBuild>
