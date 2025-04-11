@@ -63,6 +63,11 @@ cf_linux = xml_el_not_none(build_cfg, 'CFlagsLinux', 9); cf_linux = '' if cf_lin
 win_aux = xml_el_not_none(build_cfg, 'WindowsAuxiliary', 10); win_aux = None if win_aux in ['' , 'NULL'] else win_aux
 linux_aux = xml_el_not_none(build_cfg, 'LinuxAuxiliary', 11); linux_aux = None if linux_aux in ['' , 'NULL'] else linux_aux
 
+_repr_waux, _repr_laux = win_aux, linux_aux
+
+if win_aux: win_aux = "ghost-build/" + win_aux + ".py" if not win_aux.endswith(".py") else ""
+if linux_aux: linux_aux = "ghost-build/" + linux_aux + ".py" if not linux_aux.endswith(".py") else ""
+
 # Check CMakeFile for existence.
 if not exists(main_file): ghost_fail('[CONFIG] Error: CMainFile is non-existent.', 12)
 
@@ -87,29 +92,29 @@ build_cmd = f'{build_compiler_cmd} {main_file} -o {"ghost-build-" + ("windows.ex
 if gh_sys == 'W' and win_aux:
     print('[BUILD-AUXILIARY] Running Windows auxiliary file...')
 
-    if not exists(win_aux): ghost_fail('[CONFIG&BUILD] Windows auxiliary file was specified but not created.', 14)
+    if not exists(win_aux): ghost_fail('[CONFIG&BUILD] Invalid Windows auxiliary file.', 14)
 
     try:
-        run(f'python {win_aux}{".py" if not win_aux.endswith(".py") else ""}', shell=True, check=True)
+        run(f'python {win_aux}', shell=True, check=True)
     except CalledProcessError:
         ghost_fail('[BUILD-AUXILIARY] Windows auxiliary file crash: can\'t proceed.', 15)
 
 else:
-    print('[BUILD-AUXILIARY] No Windows auxiliary file is specified.')
+    print('[BUILD-AUXILIARY] Windows auxiliary file is not specified.')
 
 # Auxiliary files: Linux.
 if gh_sys == 'L' and linux_aux:
     print('[BUILD-AUXILIARY] Running Linux auxiliary file...')
 
-    if not exists(linux_aux): ghost_fail('[CONFIG&BUILD] Linux auxiliary file was specified but not created.', 16)
+    if not exists(linux_aux): ghost_fail('[CONFIG&BUILD] Invalid Linux auxiliary file.', 16)
 
     try:
-        run(f'python3 {linux_aux}{".py" if not win_aux.endswith(".py") else ""}', shell=True, check=True)
+        run(f'python3 {linux_aux}', shell=True, check=True)
     except CalledProcessError:
         ghost_fail('[BUILD-AUXILIARY] Linux auxiliary file crash: can\'t proceed.', 17)
 
 else:
-    print('[BUILD-AUXILIARY] No Linux auxiliary file is specified.')
+    print('[BUILD-AUXILIARY] Linux auxiliary file is not specified.')
 
 # Log message.
 _tab = ' ' * 13
@@ -121,7 +126,7 @@ Compiler: {build_compiler}{"? (Fallback to GNU)" if gh_sys == "W" else ""} \
 ({build_compiler_cmd})\n{_tab}C Type: {ctype}\n{_tab}Build name: {build_name}\n{_tab}\
 Main file: {main_file}\n{_tab}Windows Flags: {"None" if not cf_win else cf_win[1:]}\n{_tab}\
 Linux Flags: {"None" if not cf_linux else cf_linux[1:]}\n{_tab}\
-Windows Auxiliary: {win_aux}\n{_tab}Linux Auxiliary: {linux_aux}')
+Windows Auxiliary: {_repr_waux}\n{_tab}Linux Auxiliary: {_repr_laux}')
 
 # Start the build process.
 print(f'[BUILD] Starting the build process...')
