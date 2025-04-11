@@ -86,7 +86,7 @@ if gh_sys == 'W':
     build_compiler_cmd = build_compiler_cmd.replace('clang++', 'g++').replace('clang', 'gcc')
 
 # Building command.
-build_cmd = f'{build_compiler_cmd} {main_file} -o {"ghost-build-" + ("windows.exe" if gh_sys == "W" else "linux")}{cf_win if gh_sys == "L" else cf_linux}'
+build_cmd = f'{build_compiler_cmd} {main_file} -o {"ghost-build-" + ("windows.exe" if gh_sys == "W" else "linux")}{cf_win if gh_sys == "W" else cf_linux}'
 
 # Auxiliary files: Windows.
 if gh_sys == 'W' and win_aux:
