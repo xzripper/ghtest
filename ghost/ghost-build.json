@@ -1,6 +1,0 @@
-{
-    "CMainFile": "main.cpp",
-    "CType": "C++",
-    "CFlagsWindows": "--static",
-    "CFlagsLinux": null
-}
