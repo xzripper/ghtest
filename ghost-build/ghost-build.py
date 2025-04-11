@@ -80,7 +80,7 @@ if gh_sys not in ['W', 'L']: ghost_fail('[BUILD] Invalid gh_sys.', 13)
 build_compiler_cmd = ('gcc' if ctype == 'C' else 'g++') \
     if build_compiler == 'GNU' else ('clang' if ctype == 'C' else 'clang++')
 
-if gh_sys == 'W':
+if gh_sys == 'W' and build_compiler == 'Clang':
     print('[BUILD] [WINDOWS]: Switching to GNU because Ghost does not support Clang compiler for Windows.')
 
     build_compiler_cmd = build_compiler_cmd.replace('clang++', 'g++').replace('clang', 'gcc')
@@ -122,7 +122,7 @@ _tab = ' ' * 13
 print(\
 f'[BUILD-INFO] Running Platform: \
 {"Windows" if gh_sys == "W" else "Linux"}\n{_tab}\
-Compiler: {build_compiler}{"? (Fallback to GNU)" if gh_sys == "W" else ""} \
+Compiler: {build_compiler}{"? (Fallback to GNU)" if gh_sys == "W" and build_compiler == "Clang" else ""} \
 ({build_compiler_cmd})\n{_tab}C Type: {ctype}\n{_tab}Build name: {build_name}\n{_tab}\
 Main file: {main_file}\n{_tab}Windows Flags: {"None" if not cf_win else cf_win[1:]}\n{_tab}\
 Linux Flags: {"None" if not cf_linux else cf_linux[1:]}\n{_tab}\
