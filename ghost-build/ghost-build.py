@@ -9,7 +9,7 @@ from os.path import exists
 
 from subprocess import run, CalledProcessError
 
-from xml.etree.ElementTree import parse, Element
+from xml.etree.ElementTree import parse, Element, ParseError
 
 
 # Utilities.
@@ -33,35 +33,38 @@ print('[CONFIG] Parsing build config...')
 # Parse XML file.
 if not exists('ghost-build/ghost-build.xml'): ghost_fail('[CONFIG] Can\'t find Ghost Build Config.', 1)
 
-build_cfg = parse('ghost-build/ghost-build.xml').getroot()
+try:
+    build_cfg = parse('ghost-build/ghost-build.xml').getroot()
+except ParseError:
+    ghost_fail('[CONFIG] Can\'t parse build config: invalid syntax/missing root element (<GhostBuild>).', 2)
 
 # XML: Compiler.
 build_compiler = build_cfg.get('Compiler')
 
-if not build_compiler: ghost_fail('[CONFIG] Missing `Compiler` attribute in <GhostBuild>', 2)
+if not build_compiler: ghost_fail('[CONFIG] Missing `Compiler` attribute in <GhostBuild>', 3)
 
-if build_compiler not in ['GNU', 'Clang']: ghost_fail('[CONFIG] Invalid compiler: expected `GNU` or `Clang`.', 3)
+if build_compiler not in ['GNU', 'Clang']: ghost_fail('[CONFIG] Invalid compiler: expected `GNU` or `Clang`.', 4)
 
 # XML: CType.
 ctype = build_cfg.get('CType')
 
-if not ctype: ghost_fail('[CONFIG] Missing `CType` attribute in <GhostBuild>', 4)
+if not ctype: ghost_fail('[CONFIG] Missing `CType` attribute in <GhostBuild>', 5)
 
-if ctype not in ['C', 'C++']: ghost_fail('[CONFIG] Invalid CType: Expected `C` or `C++`.', 5)
+if ctype not in ['C', 'C++']: ghost_fail('[CONFIG] Invalid CType: Expected `C` or `C++`.', 6)
 
 # XML: BuildName.
-build_name = xml_el_not_none(build_cfg, 'BuildName', 6)
+build_name = xml_el_not_none(build_cfg, 'BuildName', 7)
 
 # XML: CMainFile
-main_file = xml_el_not_none(build_cfg, 'CMainFile', 7)
+main_file = xml_el_not_none(build_cfg, 'CMainFile', 8)
 
 # XML: CFlags(Windows/Linux)
-cf_win = xml_el_not_none(build_cfg, 'CFlagsWindows', 8); cf_win = '' if cf_win in ['' , 'NULL'] else ' ' + cf_win
-cf_linux = xml_el_not_none(build_cfg, 'CFlagsLinux', 9); cf_linux = '' if cf_linux in ['' , 'NULL'] else ' ' + cf_linux
+cf_win = xml_el_not_none(build_cfg, 'CFlagsWindows', 9); cf_win = '' if cf_win in ['' , 'NULL'] else ' ' + cf_win
+cf_linux = xml_el_not_none(build_cfg, 'CFlagsLinux', 10); cf_linux = '' if cf_linux in ['' , 'NULL'] else ' ' + cf_linux
 
 # XML: (Windows/Linux)Auxiliary
-win_aux = xml_el_not_none(build_cfg, 'WindowsAuxiliary', 10); win_aux = None if win_aux in ['' , 'NULL'] else win_aux
-linux_aux = xml_el_not_none(build_cfg, 'LinuxAuxiliary', 11); linux_aux = None if linux_aux in ['' , 'NULL'] else linux_aux
+win_aux = xml_el_not_none(build_cfg, 'WindowsAuxiliary', 11); win_aux = None if win_aux in ['' , 'NULL'] else win_aux
+linux_aux = xml_el_not_none(build_cfg, 'LinuxAuxiliary', 12); linux_aux = None if linux_aux in ['' , 'NULL'] else linux_aux
 
 _repr_waux, _repr_laux = win_aux, linux_aux
 
@@ -69,12 +72,12 @@ if win_aux: win_aux = "ghost-build/" + win_aux + ".py" if not win_aux.endswith("
 if linux_aux: linux_aux = "ghost-build/" + linux_aux + ".py" if not linux_aux.endswith(".py") else ""
 
 # Check CMakeFile for existence.
-if not exists(main_file): ghost_fail('[CONFIG] Error: CMainFile is non-existent.', 12)
+if not exists(main_file): ghost_fail('[CONFIG] Error: CMainFile is non-existent.', 13)
 
 # Get running system & validate it.
 gh_sys = system()[0]
 
-if gh_sys not in ['W', 'L']: ghost_fail('[BUILD] Invalid gh_sys.', 13)
+if gh_sys not in ['W', 'L']: ghost_fail('[BUILD] Invalid gh_sys.', 14)
 
 # Define compiler for future build.
 build_compiler_cmd = ('gcc' if ctype == 'C' else 'g++') \
@@ -92,12 +95,12 @@ build_cmd = f'{build_compiler_cmd} {main_file} -o {"ghost-build-" + ("windows.ex
 if gh_sys == 'W' and win_aux:
     print('[BUILD-AUXILIARY] Running Windows auxiliary file...')
 
-    if not exists(win_aux): ghost_fail('[CONFIG&BUILD] Invalid Windows auxiliary file.', 14)
+    if not exists(win_aux): ghost_fail('[CONFIG&BUILD] Invalid Windows auxiliary file.', 15)
 
     try:
         run(f'python {win_aux}', shell=True, check=True)
     except CalledProcessError:
-        ghost_fail('[BUILD-AUXILIARY] Windows auxiliary file crash: can\'t proceed.', 15)
+        ghost_fail('[BUILD-AUXILIARY] Windows auxiliary file crash: can\'t proceed.', 16)
 
 else:
     print('[BUILD-AUXILIARY] Windows auxiliary file is not specified.')
@@ -106,12 +109,12 @@ else:
 if gh_sys == 'L' and linux_aux:
     print('[BUILD-AUXILIARY] Running Linux auxiliary file...')
 
-    if not exists(linux_aux): ghost_fail('[CONFIG&BUILD] Invalid Linux auxiliary file.', 16)
+    if not exists(linux_aux): ghost_fail('[CONFIG&BUILD] Invalid Linux auxiliary file.', 17)
 
     try:
         run(f'python3 {linux_aux}', shell=True, check=True)
     except CalledProcessError:
-        ghost_fail('[BUILD-AUXILIARY] Linux auxiliary file crash: can\'t proceed.', 17)
+        ghost_fail('[BUILD-AUXILIARY] Linux auxiliary file crash: can\'t proceed.', 18)
 
 else:
     print('[BUILD-AUXILIARY] Linux auxiliary file is not specified.')
@@ -134,7 +137,7 @@ print(f'[BUILD] Starting the build process...')
 try:
     run(build_cmd, shell=True, check=True)
 except CalledProcessError:
-    ghost_fail('[BUILD] Build failed.', 18)
+    ghost_fail('[BUILD] Build failed.', 19)
 
 # Finish the build process.
 print('[BUILD] Build finished without any errors.')
